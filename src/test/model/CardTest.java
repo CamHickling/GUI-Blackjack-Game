@@ -16,7 +16,7 @@ public class CardTest {
 
     @Test
     public void testCard() {
-        assertEquals(card.getName().length(), 1);
+        assertTrue(card.getName().length() == 1 || card.getName().length() == 2);
         assertTrue(card.getValue() >= 2 );
         assertTrue(card.getValue() <= 10 );
     }

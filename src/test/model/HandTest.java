@@ -73,20 +73,15 @@ public class HandTest {
     }
 
     @Test
-    public void testShowMyCardsTwo() {
+    public void testShowMyCards() {
         String printcards = hand.showMyCards();
-        assertEquals(printcards.length(), 4);
-        assertEquals(printcards.charAt(1), ' ');
-        assertEquals(printcards.charAt(3), ' ');
-    }
+        String s = "";
+        for (Card c: hand.getMyCards()) {
+            s += c.getName() + " ";
+        }
+        for (int i = 0; i < hand.getMyCards().size(); i++) {
+            assertEquals(printcards.charAt(i), s.charAt(i));
 
-    @Test
-    public void testShowMyCardsThree() {
-        hand.hit();
-        String printcards = hand.showMyCards();
-        assertEquals(printcards.length(), 6);
-        assertEquals(printcards.charAt(1), ' ');
-        assertEquals(printcards.charAt(3), ' ');
-        assertEquals(printcards.charAt(5), ' ');
+        }
     }
 }
