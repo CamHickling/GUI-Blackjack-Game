@@ -1,7 +1,6 @@
 package model;
 
 import static org.junit.jupiter.api.Assertions.*;
-
 import org.junit.jupiter.api.Test;
 
 public class PlayerTest {
@@ -25,10 +24,10 @@ public class PlayerTest {
     @Test
     public void drawHand() {
         Player player = new Player("", 1);
-        Hand initialHand = player.getHand();
+        Hand initialhand = player.getHand();
         player.drawHand();
         Hand newhand = player.getHand();
-        assertNotEquals(initialHand, newhand);
+        assertNotEquals(initialhand, newhand);
     }
 
     @Test
@@ -54,31 +53,31 @@ public class PlayerTest {
     }
 
     @Test
-    public void testLose() {
+    public void testAdjustBalanceLoss() {
         Player player = new Player("", 10);
-        player.lose(5);
+        player.adjustBalance(-5);
         assertEquals(player.getBalance(), 5);
     }
 
     @Test
-    public void testLoseEqualToZero() {
+    public void testAdjustBalanceEqualToZero() {
         Player player = new Player("", 10);
-        player.lose(10);
+        player.adjustBalance(-10);
         assertEquals(player.getBalance(), 0);
     }
 
     @Test
-    public void testLoseBelowZero() {
+    public void testAdjustBalanceBelowZero() {
         Player player = new Player("", 10);
-        player.lose(20);
+        player.adjustBalance(-20);
         assertEquals(player.getBalance(), 0);
 
     }
 
     @Test
-    public void testWin() {
+    public void testAdjustBalanceWin() {
         Player player = new Player("", 10);
-        player.win(20);
+        player.adjustBalance(20);
         assertEquals(player.getBalance(), 30);
     }
 
