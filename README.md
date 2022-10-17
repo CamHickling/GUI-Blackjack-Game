@@ -36,9 +36,8 @@ and different strategies on the winnings/losings over time.
 
 ## User Stories
 
-- As a user, I want to be able to add a card to my hand
-- As a user, I want to be able to 'stand', not adding any new cards to my hand
-- As a user, I want to be able to raise and lower the bet amount
-- As a user, I want to be able to view my current money count / score
-- As a user, I want to be able to see statistics on my winrate
-- As a user, I want to be able to view a list of my wins and losses
+- As a user, I want to be able to choose my actions for each round
+- As a user, I want to be able to set the bet amount
+- As a user, I want to be able to view my current balance
+- As a user, I want to be able to see my winrate
+
