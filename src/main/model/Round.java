@@ -73,7 +73,10 @@ public class Round {
     //EFFECTS: adjusts wins and losses, player balance, and calls user interface to send out a message
     public void recordResult(Player player, int result) {
         String message;
-        ArrayList<String> messagelist = new ArrayList<>(List.of("You tied.", "You lost.", "You won!"));
+        ArrayList<String> messagelist = new ArrayList<>();
+        messagelist.add("You tied.");
+        messagelist.add("You lost.");
+        messagelist.add("You won!");
         if (result == 2) {
             this.numwins += 1;
         } else if (result == 1) {
