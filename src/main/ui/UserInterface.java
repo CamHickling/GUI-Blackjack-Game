@@ -44,10 +44,15 @@ public class UserInterface {
     //         until they select to stand
     public static void playersTurn(Player player) {
         boolean stand;
+        String line = scan.nextLine();
         do {
             System.out.println("Would you like to hit or stand? \"h\" for hit, \"s\" for stand");
-        } while (!scan.nextLine().equals("s"));
-        System.out.println("out of the loop");
+            stand = scan.nextLine().equals("s");
+            if (!stand) {
+                player.hit();
+                onAction(player.getHand(),"You are ");
+            }
+        } while (!stand);;
         player.stand();
     }
 
