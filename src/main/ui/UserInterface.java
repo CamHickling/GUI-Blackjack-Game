@@ -56,6 +56,17 @@ public class UserInterface {
         player.stand();
     }
 
+    //EFFECTS: returns true if the user indicates they want to play again
+    //         returns false otherwise
+    public static boolean playAgain() {
+        System.out.println("Would you like to play another round? y/n");
+        return scan.nextLine().equals("y");
+    }
+
+    public static void gameOver() {
+        System.out.println("GAME OVER");
+    }
+
     //EFFECTS: prints a message out to the user summarizing their wins, loses, winrate and balance.
     public static void roundMessage(Player player, String message, int wins, int losses, float winrate) {
         System.out.println(message);

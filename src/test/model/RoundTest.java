@@ -69,44 +69,6 @@ public class RoundTest {
         assertEquals(round.judgeWinner(21, 20),2);
     }
 
-    @Test
-    public void testRecordResultWin() {
-        assertEquals(round.getNumLosses(), 0);
-        assertEquals(round.getNumWins(), 0);
-        round.recordResult(round.getPlayer(), 2);
-        assertEquals(round.getNumLosses(), 0);
-        assertEquals(round.getNumWins(), 1);
-    }
-
-    @Test
-    public void testRecordResultLoss() {
-        assertEquals(round.getNumLosses(), 0);
-        assertEquals(round.getNumWins(), 0);
-        round.recordResult(round.getPlayer(), 1);
-        assertEquals(round.getNumLosses(), 1);
-        assertEquals(round.getNumWins(), 0);
-    }
-
-    @Test
-    public void testRecordResultTie() {
-        assertEquals(round.getNumLosses(), 0);
-        assertEquals(round.getNumWins(), 0);
-        round.recordResult(round.getPlayer(), 0);
-        assertEquals(round.getNumLosses(), 0);
-        assertEquals(round.getNumWins(), 0);
-    }
-
-    //REDUNDANT
-    @Test
-    public void testGetNumLosses() {
-        assertEquals(round.getNumLosses(),0);
-    }
-
-    //REDUNDANT
-    @Test
-    public void testGetNumWins() {
-        assertEquals(round.getNumWins(),0);
-    }
 
     //REDUNDANT
     @Test

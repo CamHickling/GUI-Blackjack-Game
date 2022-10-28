@@ -11,8 +11,7 @@ public class Round {
     private Hand dealer;
     private int betamount;
 
-    private int numwins;
-    private int numlosses;
+    private int result;
 
     //REQUIRES: player and dealer are not null, betamount > 1
     //EFFECTS: Creates a round instance with player, dealer and betamount.
@@ -21,8 +20,6 @@ public class Round {
         this.player = player;
         this.dealer = dealer;
         this.betamount = betamount;
-        this.numlosses = 0;
-        this.numwins = 0;
 
         if (!testassignment) {
             dealersTurn(dealer);
@@ -33,7 +30,6 @@ public class Round {
                 dealersTurn(player.getHand());
             }
             UserInterface.onAction(dealer, "The Dealer is ");
-            recordResult(player, judgeWinner(player.getHand().getHandValue(), dealer.getHandValue()));
         }
     }
 
@@ -56,59 +52,22 @@ public class Round {
     //          2 - player beats dealer
     public int judgeWinner(int playervalue, int dealervalue) {
         if (playervalue > 21 && dealervalue > 21) {
-            return 0;
+            this.result = 0;
         }  else if (playervalue > 21) {
-            return 1;
+            this.result = 1;
         } else if (dealervalue > 21) {
-            return 2;
+            this.result = 2;;
         } else if (playervalue <= dealervalue) {
-            return 1;
+            this.result = 1;
         } else { //(playervalue > dealervalue)
-            return 2;
+            this.result = 2;
         }
+        return this.result;
     }
-
-    //REQUIRES: player, round not null, result is either 0,1,2
-    //MODIFIES: this
-    //EFFECTS: adjusts wins and losses, player balance, and calls user interface to send out a message
-    public void recordResult(Player player, int result) {
-        String message;
-        ArrayList<String> messagelist = new ArrayList<>();
-        messagelist.add("You tied.");
-        messagelist.add("You lost.");
-        messagelist.add("You won!");
-        if (result == 2) {
-            this.numwins += 1;
-        } else if (result == 1) {
-            this.numlosses += 1;
-        }
-        if (result != 0) {
-            int direction = ((result * 2) - 3);
-            player.adjustBalance(direction * getBetAmount());
-        }
-        float winrate = getWinrate(this.numwins, this.numlosses);
-        UserInterface.roundMessage(player, messagelist.get(result), this.numwins, this.numlosses, winrate);
-    }
-
-    //EFFECTS: returns a winrate representing the ratio of the player's wins to total games excluding ties
-    //          will return a 0% winrate on no wins no losses
-    public float getWinrate(int wins, int losses) {
-        int gamesplayed = Math.max(wins + losses, 1);
-        return ((float) wins / gamesplayed) * 100;
-    }
-
-    public int getNumLosses() {
-        return this.numlosses;
-    }
-
-    public int getNumWins() {
-        return this.numwins;
-    }
-
 
     //EFFECTS: returns the betamount of the round
     public int getBetAmount() {
-        return betamount;
+        return this.betamount;
     }
 
     //EFFECTS: returns the round's dealer hand object
