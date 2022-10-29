@@ -1,9 +1,13 @@
 package model;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+import persistence.Reader;
 import ui.UserInterface;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
 
 import static java.util.Objects.isNull;
 
@@ -18,28 +22,65 @@ public class Game {
     private Hand dealer;
     private Round round;
 
+    private int savegamebalance;
+
     public Game(String name, int balance, boolean testassignment) {
         this.gameover = false;
-        this.playagain = false;
+        this.playagain = true;
         this.player = new Player(name, balance);
+        this.savegamebalance = 0;
 
         if (!testassignment) {
-            // loop that plays one rounds then repeats unless the user asks to leave, or reaches 0 balance and loses
-            do {
-                int betamount = UserInterface.askBetAmount(this.player.getBalance());
-                this.player.drawHand();
-                this.dealer = new Hand();
-                this.round = new Round(this.player, this.dealer, betamount, false, false);
-
-                //record result and add to the list of rounds
-                recordResult(player, round.judgeWinner(player.getHand().getHandValue(), dealer.getHandValue()));
-                roundlist.add(round);
-
-                //determine whether to play another round
-                continuePlaying(this.player);
-
-            } while (this.playagain && !this.gameover);
+            new Game(true, this.player);
         }
+    }
+
+    public Game(boolean gameover, boolean playagain, int numwins, int numlosses, Player player, ArrayList<Round> rl,
+                int savegamebalance) {
+        this.gameover = gameover;
+        this.playagain = playagain;
+        this.numwins = numwins;
+        this.numlosses = numlosses;
+        this.roundlist = rl;
+        this.player = player;
+        this.savegamebalance = savegamebalance;
+
+        new Game(playagain, player);
+    }
+
+    public Game(boolean playagain, Player player) {
+        // loop that plays one rounds then repeats unless the user asks to leave, or reaches 0 balance and loses
+        this.playagain = playagain;
+        this.player = player;
+        while (this.playagain && !this.gameover) {
+            int betamount = UserInterface.askBetAmount(this.player.getBalance());
+            this.player.drawHand();
+            this.dealer = new Hand();
+            this.round = new Round(this.player, this.dealer, betamount, false, false);
+
+            //record result and add to the list of rounds
+            recordResult(player, round.judgeWinner(player.getHand().getHandValue(), dealer.getHandValue()));
+            roundlist.add(round);
+
+            //determine whether to play another round
+            continuePlaying(this.player);
+        }
+        File f = new File("./data/rounds.json");
+        if (f.length() > 0) {
+            UserInterface.printMessage("Your save game has a balance of: " + getSaveGameBalance());
+        }
+        UserInterface.askToSave(this);
+    }
+
+    private String getSaveGameBalance() {
+        Reader r = new Reader("./data/rounds.json");
+        try {
+            int sgb = r.readSaveGameBalance();
+            return String.valueOf(sgb);
+        } catch (IOException e) {
+            return String.valueOf(savegamebalance);
+        }
+
     }
 
     //REQUIRES: player not null
@@ -107,6 +148,26 @@ public class Game {
 
     public boolean getGameOver() {
         return this.gameover;
+    }
+
+    public JSONObject toJson() {
+        JSONObject json = new JSONObject();
+        json.put("gameover", gameover);
+        json.put("playagain", playagain);
+        json.put("numwins", numwins);
+        json.put("numlosses", numlosses);
+        json.put("player", player.toJson());
+        json.put("savegamebalance", savegamebalance);
+
+        JSONArray jarray = new JSONArray();
+        for (Round r: roundlist) {
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("round", r.toJson());
+            jarray.put(jsonObject);
+        }
+        json.put("rounds", jarray);
+
+        return json;
     }
 
 }

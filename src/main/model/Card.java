@@ -22,12 +22,23 @@ public class Card {
         DECK.add("A");
 
         this.name = DECK.get((int) (Math.random() * DECK.size()));
-        if (this.name == "J" || this.name == "Q" || this.name == "K") {
-            this.value = 10;
+        this.value =  findValue(this.name);
+    }
+
+    //EFFECTS: instantiates a card instance, assigns the given name and finds value
+    public Card(String name) {
+        this.name = name;
+        this.value = findValue(this.name);
+    }
+
+    //returns the appropriate value for the given card name given
+    public int findValue(String name) {
+        if (this.name.equals("J") || this.name.equals("Q") || this.name.equals("K")) {
+            return 10;
         } else if (this.name == "A") {
-            this.value = 11;
+            return 11;
         } else {
-            this.value = Integer.valueOf(this.name);
+            return Integer.valueOf(this.name);
         }
     }
 
@@ -39,5 +50,10 @@ public class Card {
     //EFFECTS: returns the card's value
     public int getValue() {
         return this.value;
+    }
+
+    @Override
+    public String toString() {
+        return this.name;
     }
 }

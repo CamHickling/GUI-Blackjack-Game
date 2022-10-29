@@ -1,5 +1,6 @@
 package model;
 
+import org.json.JSONObject;
 import ui.UserInterface;
 
 //Player represents blackjack player
@@ -15,6 +16,14 @@ public class Player {
         this.name = name;
         this.balance = initialBalance;
         drawHand();
+    }
+
+    //REQUIRES: initialBalance > 0
+    //EFFECTS: creates a Player instance, assigns name and balance and hand given
+    public Player(String name, int initialBalance, Hand hand) {
+        this.name = name;
+        this.balance = initialBalance;
+        this.hand = hand;
     }
 
     //MODIFIES: this
@@ -59,5 +68,17 @@ public class Player {
     //EFFECTS: returns the player's name
     public String getName() {
         return name;
+    }
+
+    public String toString() {
+        return name + " " + hand.toString() + "" + balance;
+    }
+
+    public JSONObject toJson() {
+        JSONObject json = new JSONObject();
+        json.put("name", name);
+        json.put("hand", hand.toJson());
+        json.put("balance", balance);
+        return json;
     }
 }

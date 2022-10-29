@@ -1,5 +1,8 @@
 package model;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,6 +17,11 @@ public class Hand {
         this.cards = new ArrayList<>();
         hit();
         hit();
+    }
+
+    //EFFECTS: creates a new Hand instance, using the given list of card objects
+    public Hand(ArrayList<Card> cards) {
+        this.cards = cards;
     }
 
     //MODIFIES: this
@@ -54,5 +62,23 @@ public class Hand {
             s += c.getName() + " ";
         }
         return s;
+    }
+
+    public String toString() {
+        String s = "";
+        for (Card c: cards) {
+            s += c.toString() + " ";
+        }
+        return s;
+    }
+
+    public JSONArray toJson() {
+        JSONArray jarray = new JSONArray();
+        for (Card c : cards) {
+            JSONObject json = new JSONObject();
+            json.put("card", c.toString());
+            jarray.put(json);
+        }
+        return jarray;
     }
 }

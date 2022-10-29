@@ -36,8 +36,11 @@ and different strategies on the winnings/losings over time.
 
 ## User Stories
 
-- As a user, I want to be able to choose my actions for each round
-- As a user, I want to be able to set the bet amount
-- As a user, I want to be able to view my current balance
-- As a user, I want to be able to see my winrate
+- As a user, I want to be able to select which move to perform as in real blackjack
+- As a user, I want to be able to choose how much money to wager
+- As a user, I want to be able to view a round report after each round
+- As a user, I want to be told if my save game has more balance than my current game
+- 
+- As a user, I want to choose between loading an old game or starting a new one
+- As a user, I want to be able to choose to save or not save at the end of each round
 

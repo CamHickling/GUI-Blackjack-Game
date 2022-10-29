@@ -1,9 +1,9 @@
 package model;
 
+import org.json.JSONObject;
 import ui.UserInterface;
 
-import java.util.ArrayList;
-import java.util.List;
+
 
 //Round represents one round of blackjack
 public class Round {
@@ -31,6 +31,14 @@ public class Round {
             }
             UserInterface.onAction(dealer, "The Dealer is ");
         }
+    }
+
+    //EFFECTS: Instantiates a new Round class with given player, dealer, betamount, result
+    public Round(Player player, Hand dealer, int betamount, int result) {
+        this.player = player;
+        this.dealer = dealer;
+        this.betamount = betamount;
+        this.result = result;
     }
 
     //REQUIRES: dealer not null
@@ -78,5 +86,23 @@ public class Round {
     //EFFECTS: returns the round's player object
     public Player getPlayer() {
         return this.player;
+    }
+
+    @Override
+    public String toString() {
+        return player.toString() + " !" + dealer.toString() + " " + betamount + " " + result;
+    }
+
+    public JSONObject toJson() {
+        JSONObject json = new JSONObject();
+        json.put("player", player.toJson());
+        json.put("hand", dealer.toJson());
+        json.put("betamount", betamount);
+        json.put("result", result);
+        return json;
+    }
+
+    public int getResult() {
+        return result;
     }
 }

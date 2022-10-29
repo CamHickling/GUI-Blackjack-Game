@@ -1,12 +1,19 @@
 package ui;
 
+import model.Game;
 import model.Hand;
 import model.Player;
 import model.Round;
+import persistence.Reader;
+import persistence.Writer;
 
+import java.io.IOException;
 import java.util.Scanner;
 
 public class UserInterface {
+
+
+    private static final String path = "./data/rounds.json";
 
     static Scanner scan = new Scanner(System.in);
 
@@ -84,5 +91,45 @@ public class UserInterface {
     //EFFECTS: prints as message revealing one of the dealer's cards
     public static void revealDealerCard(String cardname) {
         System.out.println("The Dealer is holding a(n) " + cardname);
+    }
+
+    // some code here used from Json Serialize Demo @ https://github.students.cs.ubc.ca/CPSC210/JsonSerializationDemo
+    //MODIFIES: file described in path string
+    //EFFECTS: records the current object state of Game in a JSON file in the data folder
+    public static void askToSave(Game game) {
+        System.out.println("Would you like to save your game? y/n");
+        String s = scan.nextLine();
+        if (s.equals("y")) {
+            Writer w = new Writer(path);
+
+            try {
+                w.open();
+                w.write(game);
+                w.close();
+                System.out.println("...");
+                System.out.println("Your game was saved sucessfully!");
+            } catch (IOException e) {
+                System.out.println("IO EXCEPTION");
+            }
+        } else if (s.equals("n")) {
+            System.out.println("Game not saved...");
+        }
+    }
+
+    public static void askToLoad() {
+        System.out.println("Would you like to load your saved game? y/n");
+        String s = scan.nextLine();
+        if (s.equals("y")) {
+            Reader r = new Reader(path);
+            try {
+                Game game = r.read();
+            } catch (IOException e) {
+                System.out.println("IO EXCEPTION");
+            }
+        } else if (s.equals("n")) {
+            System.out.println("You have chosen to start a new game.");
+            System.out.println("The new game will not overwrite the saved game "
+                    + "unless you choose to save before quitting");
+        }
     }
 }
