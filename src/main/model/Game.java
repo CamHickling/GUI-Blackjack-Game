@@ -31,7 +31,7 @@ public class Game {
         this.savegamebalance = 0;
 
         if (!testassignment) {
-            new Game(true, this.player);
+            new Game(this.player);
         }
     }
 
@@ -45,12 +45,12 @@ public class Game {
         this.player = player;
         this.savegamebalance = savegamebalance;
 
-        new Game(playagain, player);
+        new Game(player);
     }
 
-    public Game(boolean playagain, Player player) {
+    public Game(Player player) {
         // loop that plays one rounds then repeats unless the user asks to leave, or reaches 0 balance and loses
-        this.playagain = playagain;
+        this.playagain = true;
         this.player = player;
         while (this.playagain && !this.gameover) {
             int betamount = UserInterface.askBetAmount(this.player.getBalance());
