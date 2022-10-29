@@ -107,7 +107,7 @@ public class UserInterface {
                 w.write(game);
                 w.close();
                 System.out.println("...");
-                System.out.println("Your game was saved sucessfully!");
+                System.out.println("Your game was saved successfully!");
             } catch (IOException e) {
                 System.out.println("IO EXCEPTION");
             }

@@ -38,7 +38,7 @@ public class Game {
     public Game(boolean gameover, boolean playagain, int numwins, int numlosses, Player player, ArrayList<Round> rl,
                 int savegamebalance) {
         this.gameover = gameover;
-        this.playagain = playagain;
+        this.playagain = true;
         this.numwins = numwins;
         this.numlosses = numlosses;
         this.roundlist = rl;
@@ -66,8 +66,10 @@ public class Game {
             continuePlaying(this.player);
         }
         File f = new File("./data/rounds.json");
-        if (f.length() > 0) {
+        if (f.length() > 3) {
             UserInterface.printMessage("Your save game has a balance of: " + getSaveGameBalance());
+        } else {
+            savegamebalance = getPlayer().getBalance();
         }
         UserInterface.askToSave(this);
     }
@@ -76,9 +78,11 @@ public class Game {
         Reader r = new Reader("./data/rounds.json");
         try {
             int sgb = r.readSaveGameBalance();
+            this.savegamebalance = sgb;
             return String.valueOf(sgb);
         } catch (IOException e) {
-            return String.valueOf(savegamebalance);
+            System.out.println("IO EXP");
+            return String.valueOf(this.savegamebalance);
         }
 
     }
@@ -93,7 +97,6 @@ public class Game {
             this.playagain = UserInterface.playAgain();
         } else {
             UserInterface.gameOver();
-            UserInterface.roundMessage(player, "You had", numwins, numlosses, getWinrate());
         }
     }
 
