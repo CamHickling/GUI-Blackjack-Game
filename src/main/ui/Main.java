@@ -14,12 +14,14 @@ public class Main {
         File f = new File("./data/rounds.json");
         if (f.length() > 3) {
             UserInterface.askToLoad();
+        } else {
+            String name = UserInterface.askName();
+            int startingbalance = UserInterface.askStartingBalance();
+
+            Game game = new Game(name, startingbalance, false);
         }
 
-        String name = UserInterface.askName();
-        int startingbalance = UserInterface.askStartingBalance();
 
-        Game game = new Game(name, startingbalance, false);
 
     }
 }
