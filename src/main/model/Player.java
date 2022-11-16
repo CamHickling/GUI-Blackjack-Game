@@ -18,14 +18,6 @@ public class Player {
         drawHand();
     }
 
-    //REQUIRES: initialBalance > 0
-    //EFFECTS: creates a Player instance, assigns name and balance and hand given
-    public Player(String name, int initialBalance, Hand hand) {
-        this.name = name;
-        this.balance = initialBalance;
-        this.hand = hand;
-    }
-
     //MODIFIES: this
     //EFFECTS: draws a new hand of cards and assigns it to the player
     public void drawHand() {
@@ -70,15 +62,8 @@ public class Player {
         return name;
     }
 
+    @Override
     public String toString() {
         return name + " " + hand.toString() + "" + balance;
-    }
-
-    public JSONObject toJson() {
-        JSONObject json = new JSONObject();
-        json.put("name", name);
-        json.put("hand", hand.toJson());
-        json.put("balance", balance);
-        return json;
     }
 }

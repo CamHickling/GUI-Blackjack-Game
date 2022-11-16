@@ -9,7 +9,7 @@ import java.util.List;
 //Hand represents a list of cards that a person has been dealt
 public class Hand {
 
-    private final List<Card> cards;
+    private final ArrayList<Card> cards;
     private int handValue;
 
     //EFFECTS: creates a new Hand instance, and hits to add two cards to the hand.
@@ -22,6 +22,7 @@ public class Hand {
     //EFFECTS: creates a new Hand instance, using the given list of card objects
     public Hand(ArrayList<Card> cards) {
         this.cards = cards;
+        this.handValue = calculateHandValue();
     }
 
     //MODIFIES: this
@@ -37,7 +38,7 @@ public class Hand {
     }
 
     //EFFECTS: returns the list of cards in the hand
-    public List<Card> getMyCards() {
+    public ArrayList<Card> getMyCards() {
         return this.cards;
     }
 
@@ -55,15 +56,7 @@ public class Hand {
         return this.handValue;
     }
 
-    //EFFECTS: returns a string of the cards in a hand
-    public String showMyCards() {
-        String s = "";
-        for (Card c: this.cards) {
-            s += c.getName() + " ";
-        }
-        return s;
-    }
-
+    @Override
     public String toString() {
         String s = "";
         for (Card c: cards) {
@@ -72,6 +65,7 @@ public class Hand {
         return s;
     }
 
+    /*
     public JSONArray toJson() {
         JSONArray jarray = new JSONArray();
         for (Card c : cards) {
@@ -81,4 +75,6 @@ public class Hand {
         }
         return jarray;
     }
+
+     */
 }

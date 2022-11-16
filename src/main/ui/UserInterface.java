@@ -9,11 +9,14 @@ import persistence.Writer;
 
 import java.io.IOException;
 import java.util.Scanner;
+import java.util.regex.Pattern;
+
+import static java.util.Objects.isNull;
 
 public class UserInterface {
 
 
-    private static final String path = "./data/rounds.json";
+    private static final String path = "./data/game.json";
 
     static Scanner scan = new Scanner(System.in);
 
@@ -30,8 +33,11 @@ public class UserInterface {
     }
 
     //EFFECTS: prints a message out to the user and waits for a bet amount in response
-    public static int askBetAmount(int balance) {
+    public static int askBetAmount(int balance, boolean test) {
         System.out.println("Please print an integer bet amount between 1 and " + balance + " inclusive:");
+        if (test) {
+            return 1;
+        }
         return scan.nextInt();
     }
 
@@ -42,32 +48,55 @@ public class UserInterface {
 
     //EFFECTS: prints a message, list of card, and hand value to the user
     public static void onAction(Hand hand, String subject) {
-        System.out.println(subject + "holding " + hand.showMyCards() + ": " + hand.getHandValue());
+        System.out.println(subject + "holding " + hand.toString() + ": " + hand.getHandValue());
     }
 
     //REQUIRES: player not null
     //MODIFIES: player's hand's mycards field
     //EFFECTS: player can select to continue drawing a card to their hand
     //         until they select to stand
-    public static void playersTurn(Player player) {
-        boolean stand;
-        String line = scan.nextLine();
+    public static void playersTurn(Player player, Boolean test) {
+        Boolean stand = null;
+        Boolean action1  = test;
+        Boolean action2 = test;
+        String userIn;
         do {
             System.out.println("Would you like to hit or stand? \"h\" for hit, \"s\" for stand");
-            stand = scan.nextLine().equals("s");
-            if (!stand) {
-                player.hit();
-                onAction(player.getHand(),"You are ");
+            if (action1 && action2) {
+                userIn = "h";
+            } else if (!action1 && action2) {
+                userIn = "s";
+            } else {
+                if (isNull(stand)) {
+                    scan.next();
+                }
+                userIn = scan.nextLine();
             }
-        } while (!stand);;
+            action1 = false;
+            stand = userIn.equals("s");
+            hitIfNotStand(player, stand);
+        } while (!stand);
         player.stand();
+    }
+
+    private static void hitIfNotStand(Player player, Boolean stand) {
+        if (!stand) {
+            player.hit();
+            onAction(player.getHand(),"You are ");
+        }
     }
 
     //EFFECTS: returns true if the user indicates they want to play again
     //         returns false otherwise
-    public static boolean playAgain() {
-        System.out.println("Would you like to play another round? y/n");
-        return scan.nextLine().equals("y");
+    public static boolean playAgain(Boolean test) {
+        String userIn;
+        if (!test) {
+            System.out.println("Would you like to play another round? y/n");
+            userIn = scan.nextLine();
+        } else {
+            userIn = "n";
+        }
+        return userIn.equals("y");
     }
 
     public static void gameOver() {
@@ -96,9 +125,16 @@ public class UserInterface {
     // some code here used from Json Serialize Demo @ https://github.students.cs.ubc.ca/CPSC210/JsonSerializationDemo
     //MODIFIES: file described in path string
     //EFFECTS: records the current object state of Game in a JSON file in the data folder
-    public static void askToSave(Game game) {
+    public static void askToSave(Game game, boolean test) {
         System.out.println("Would you like to save your game? y/n");
-        String s = scan.nextLine();
+        String s;
+
+        if (test) {
+            s = "n";
+        } else {
+            s = scan.nextLine();
+        }
+
         if (s.equals("y")) {
             Writer w = new Writer(path);
 
@@ -122,7 +158,7 @@ public class UserInterface {
         if (s.equals("y")) {
             Reader r = new Reader(path);
             try {
-                Game game = r.read();
+                Game game = r.read("./data/game.json", false);
             } catch (IOException e) {
                 System.out.println("IO EXCEPTION");
             }
@@ -130,6 +166,11 @@ public class UserInterface {
             System.out.println("You have chosen to start a new game.");
             System.out.println("The new game will not overwrite the saved game "
                     + "unless you choose to save before quitting");
+
+            String name = UserInterface.askName();
+            int startingbalance = UserInterface.askStartingBalance();
+
+            Game game = new Game(name, startingbalance, false);
         }
     }
 }

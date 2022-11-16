@@ -5,6 +5,8 @@ import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
+
 public class HandTest {
 
     Hand hand;
@@ -19,6 +21,15 @@ public class HandTest {
         assertEquals(hand.getMyCards().size(), 2);
         assertTrue(hand.getHandValue() <= 21);
         assertTrue(hand.getHandValue() >= 4);
+    }
+
+    @Test
+    public void testHand2() {
+        ArrayList<Card> lstOfCards = new ArrayList<>();
+        lstOfCards.add(new Card("1"));
+        lstOfCards.add(new Card("2"));
+        Hand hand2 = new Hand(lstOfCards);
+        assertEquals(hand2.getHandValue(), 3);
     }
 
     @Test
@@ -68,20 +79,16 @@ public class HandTest {
 
     @Test
     public void testGetHandValue() {
-        assertTrue(hand.getHandValue() <= 21);
+        assertTrue(hand.getHandValue() <= 22);
         assertTrue(hand.getHandValue() >= 4);
     }
 
     @Test
-    public void testShowMyCards() {
-        String printcards = hand.showMyCards();
-        String s = "";
-        for (Card c: hand.getMyCards()) {
-            s += c.getName() + " ";
-        }
-        for (int i = 0; i < hand.getMyCards().size(); i++) {
-            assertEquals(printcards.charAt(i), s.charAt(i));
-
-        }
+    public void testToString() {
+        ArrayList<Card> lstOfCards = new ArrayList<>();
+        lstOfCards.add(new Card("1"));
+        lstOfCards.add(new Card("2"));
+        Hand hand2 = new Hand(lstOfCards);
+        assertEquals("1 2 ", hand2.toString());
     }
 }

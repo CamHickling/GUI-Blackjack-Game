@@ -11,7 +11,7 @@ import java.util.ArrayList;
 
 public class Main {
     public static void main(String[] args) {
-        File f = new File("./data/rounds.json");
+        File f = new File("./data/game.json");
         if (f.length() > 3) {
             UserInterface.askToLoad();
         } else {
@@ -20,8 +20,5 @@ public class Main {
 
             Game game = new Game(name, startingbalance, false);
         }
-
-
-
     }
 }

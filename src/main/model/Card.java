@@ -35,10 +35,10 @@ public class Card {
     public int findValue(String name) {
         if (this.name.equals("J") || this.name.equals("Q") || this.name.equals("K")) {
             return 10;
-        } else if (this.name == "A") {
+        } else if (this.name.equals("A")) {
             return 11;
         } else {
-            return Integer.valueOf(this.name);
+            return Integer.parseInt(this.name);
         }
     }
 

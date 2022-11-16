@@ -8,6 +8,7 @@ import ui.UserInterface;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Objects;
 
 import static java.util.Objects.isNull;
 
@@ -24,77 +25,94 @@ public class Game {
 
     private int savegamebalance;
 
-    public Game(String name, int balance, boolean testassignment) {
+    //EFFECTS: instantiates a game object
+    public Game(String name, int balance, boolean test) {
         this.gameover = false;
         this.playagain = true;
         this.player = new Player(name, balance);
         this.savegamebalance = 0;
+        this.numwins = 0;
+        this.numlosses = 0;
 
-        if (!testassignment) {
-            new Game(this.player);
+        if (!test) {
+            playGame(test);
         }
     }
 
-    public Game(boolean gameover, boolean playagain, int numwins, int numlosses, Player player, ArrayList<Round> rl,
-                int savegamebalance) {
+    //EFFECTS:  instantiates a game object
+    public Game(boolean gameover, boolean playagain, int numwins, int numlosses, ArrayList<Round> rl,
+                int savegamebalance, boolean test) {
         this.gameover = gameover;
         this.playagain = true;
         this.numwins = numwins;
         this.numlosses = numlosses;
         this.roundlist = rl;
-        this.player = player;
         this.savegamebalance = savegamebalance;
+        this.player = new Player("", this.savegamebalance);
+        this.dealer = new Hand();
 
-        new Game(player);
+        playGame(test);
     }
 
-    public Game(Player player) {
-        // loop that plays one rounds then repeats unless the user asks to leave, or reaches 0 balance and loses
-        this.playagain = true;
-        this.player = player;
+    //EFFECTS: plays through a game of blackjack
+    public void playGame(boolean test) {
+
         while (this.playagain && !this.gameover) {
-            int betamount = UserInterface.askBetAmount(this.player.getBalance());
+
+            int betamount = UserInterface.askBetAmount(this.player.getBalance(), test);
+
             this.player.drawHand();
             this.dealer = new Hand();
-            this.round = new Round(this.player, this.dealer, betamount, false, false);
+            this.round = new Round(this.player, this.dealer, betamount, test);
 
             //record result and add to the list of rounds
             recordResult(player, round.judgeWinner(player.getHand().getHandValue(), dealer.getHandValue()));
             roundlist.add(round);
 
             //determine whether to play another round
-            continuePlaying(this.player);
+            continuePlaying(this.player, test);
         }
-        File f = new File("./data/rounds.json");
-        if (f.length() > 3) {
-            UserInterface.printMessage("Your save game has a balance of: " + getSaveGameBalance());
-        } else {
-            savegamebalance = getPlayer().getBalance();
-        }
-        UserInterface.askToSave(this);
+        showCurrentSaveGameBalance("./data/game.json");
+        UserInterface.askToSave(this, test);
     }
 
-    private String getSaveGameBalance() {
-        Reader r = new Reader("./data/rounds.json");
+    //MODIFIES: this
+    //EFFECTS: gets the save game balance if it is there
+    public String fetchSaveGameBalance(boolean test) {
+        Reader r = new Reader("./data/game.json");
         try {
-            int sgb = r.readSaveGameBalance();
+            int sgb = r.readSaveGameBalance(test);
             this.savegamebalance = sgb;
             return String.valueOf(sgb);
         } catch (IOException e) {
-            System.out.println("IO EXP");
             return String.valueOf(this.savegamebalance);
         }
+    }
 
+    //EFFECTS: if a file exists print the current balance
+    //          otherwise set it from player balance
+    public void showCurrentSaveGameBalance(String path) {
+        File f = new File(path);
+        if (f.length() > 3) {
+            UserInterface.printMessage("Your save game has a balance of: " + fetchSaveGameBalance(false));
+        } else {
+            this.savegamebalance = getPlayer().getBalance();
+        }
+    }
+
+    //EFFECT: return savegamebalance
+    public int getSaveGameBalance() {
+        return this.savegamebalance;
     }
 
     //REQUIRES: player not null
     //MODIFIES: this
     //EFFECTS: set game over to true if the player has no more money, then calls a user interface to tell the user
     //         otherwise calls user interface to ask user if they want to play again
-    public void continuePlaying(Player player) {
+    public void continuePlaying(Player player, boolean test) {
         this.gameover = player.getBalance() == 0;
         if (!this.gameover) {
-            this.playagain = UserInterface.playAgain();
+            this.playagain = UserInterface.playAgain(test);
         } else {
             UserInterface.gameOver();
         }
@@ -141,25 +159,43 @@ public class Game {
         return ((float) this.numwins / gamesplayed) * 100;
     }
 
+    //EFFECTS: returns player in game
     public Player getPlayer() {
         return this.player;
     }
 
+    //EFFECTS: returns dealer in game
+    public Hand getDealer() {
+        return this.dealer;
+    }
+
+    //EFFECTS: returns current round object in game
     public Round getRound() {
         return this.round;
     }
 
+    //EFFECTS: returns game over bool
     public boolean getGameOver() {
         return this.gameover;
     }
 
+    //EFFECTS: returns playagain bool
+    public boolean getPlayAgain() {
+        return this.playagain;
+    }
+
+    //EFFECTS: returns roundlist
+    public ArrayList<Round> getRoundList() {
+        return this.roundlist;
+    }
+
+    //EFFECTS: returns fields as JSON object
     public JSONObject toJson() {
         JSONObject json = new JSONObject();
         json.put("gameover", gameover);
         json.put("playagain", playagain);
         json.put("numwins", numwins);
         json.put("numlosses", numlosses);
-        json.put("player", player.toJson());
         json.put("savegamebalance", savegamebalance);
 
         JSONArray jarray = new JSONArray();
@@ -173,4 +209,24 @@ public class Game {
         return json;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        Game game = (Game) o;
+        return gameover == game.gameover
+                && playagain == game.playagain
+                && numwins == game.numwins
+                && numlosses == game.numlosses
+                && savegamebalance == game.savegamebalance;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(gameover, playagain, numwins, numlosses, savegamebalance);
+    }
 }

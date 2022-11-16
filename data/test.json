@@ -1,0 +1,11 @@
+{
+    "playagain": false,
+    "numwins": 1,
+    "numlosses": 0,
+    "savegamebalance": 35311,
+    "rounds": [{"round": {
+        "result": 2,
+        "betamount": 1
+    }}],
+    "gameover": false
+}

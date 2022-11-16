@@ -3,6 +3,7 @@ package model;
 import org.json.JSONObject;
 import ui.UserInterface;
 
+import java.util.Objects;
 
 
 //Round represents one round of blackjack
@@ -16,27 +17,20 @@ public class Round {
     //REQUIRES: player and dealer are not null, betamount > 1
     //EFFECTS: Creates a round instance with player, dealer and betamount.
     //         Call methods to initiate dealers turn then player turn.
-    public Round(Player player, Hand dealer, int betamount, boolean testassignment, boolean testbehavior) {
+    public Round(Player player, Hand dealer, int betamount, boolean test) {
         this.player = player;
         this.dealer = dealer;
         this.betamount = betamount;
 
-        if (!testassignment) {
-            dealersTurn(dealer);
-            UserInterface.onAction(player.getHand(), "You are ");
-            if (!testbehavior) {
-                UserInterface.playersTurn(player);
-            } else {
-                dealersTurn(player.getHand());
-            }
-            UserInterface.onAction(dealer, "The Dealer is ");
-        }
+        dealersTurn(dealer);
+        UserInterface.onAction(player.getHand(), "You are ");
+        UserInterface.playersTurn(player, test);
+        UserInterface.onAction(dealer, "The Dealer is ");
     }
 
-    //EFFECTS: Instantiates a new Round class with given player, dealer, betamount, result
-    public Round(Player player, Hand dealer, int betamount, int result) {
-        this.player = player;
-        this.dealer = dealer;
+    //EFFECTS: Instantiates a new Round class with given betamount and result
+    //          used to recontruct round from JSON file
+    public Round(int betamount, int result) {
         this.betamount = betamount;
         this.result = result;
     }
@@ -88,15 +82,8 @@ public class Round {
         return this.player;
     }
 
-    @Override
-    public String toString() {
-        return player.toString() + " !" + dealer.toString() + " " + betamount + " " + result;
-    }
-
     public JSONObject toJson() {
         JSONObject json = new JSONObject();
-        json.put("player", player.toJson());
-        json.put("hand", dealer.toJson());
         json.put("betamount", betamount);
         json.put("result", result);
         return json;
@@ -104,5 +91,25 @@ public class Round {
 
     public int getResult() {
         return result;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        Round round = (Round) o;
+        return betamount == round.betamount
+                && result == round.result
+                && Objects.equals(player, round.player)
+                && Objects.equals(dealer, round.dealer);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(player, dealer, betamount, result);
     }
 }

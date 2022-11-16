@@ -3,10 +3,12 @@ package model;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
+
 public class PlayerTest {
 
     @Test
-    public void testPLayer() {
+    public void testPlayer() {
         Player player = new Player("", 1);
         assertEquals(player.getName(), "");
         assertEquals(player.getBalance(), 1);
@@ -101,6 +103,24 @@ public class PlayerTest {
     public void testGetName() {
         Player player = new Player("Cam", 1000);
         assertEquals(player.getName(), "Cam");
+    }
+
+    @Test
+    public void testToString() {
+        Player play = new Player("A", 100);
+        assertEquals( "A" + " " + play.getHand().toString() + "" + 100, play.toString());
+    }
+
+    @Test
+    public void testDrawHand() {
+        Player play = new Player("", 1);
+
+        for (int i = 0; i < 100; i++) {
+            play.getHand().hit();
+        }
+        ArrayList<Card> loc = play.getHand().getMyCards();
+        play.drawHand();
+        assertNotEquals(loc, play.getHand().getMyCards());
     }
 
 }
