@@ -44,3 +44,10 @@ and different strategies on the winnings/losings over time.
 - As a user, I want to choose between loading an old game or starting a new one
 - As a user, I want to be able to choose to save or not save at the end of each round
 
+# Instructions for Grader
+
+- You can generate the first required event related to adding Xs to a Y by selecting to hit
+- You can generate the second required event related to adding Xs to a Y by selecting to stand
+- You can locate my visual component on my menu load screen
+- You can save the state of my application by selecting the save and close button
+- You can reload the state of my application by selecting the load button in the loading menu
