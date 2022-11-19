@@ -1,3 +1,4 @@
+/*
 package ui;
 
 import model.Game;
@@ -170,7 +171,9 @@ public class UserInterface {
             String name = UserInterface.askName();
             int startingbalance = UserInterface.askStartingBalance();
 
-            Game game = new Game(name, startingbalance, false);
+            Game game = new Game(startingbalance, false);
         }
     }
 }
+
+ */

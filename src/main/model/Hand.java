@@ -4,6 +4,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 //Hand represents a list of cards that a person has been dealt
@@ -58,9 +59,18 @@ public class Hand {
 
     @Override
     public String toString() {
+        String delim = "";
         String s = "";
         for (Card c: cards) {
-            s += c.toString() + " ";
+            s += c.getName() + " ";
+        }
+        s += "has value: ";
+        int hv = getHandValue();
+        s += hv;
+        if (hv == 21) {
+            s += " Blackjack!";
+        } else if (hv > 21) {
+            s += " Bust!";
         }
         return s;
     }

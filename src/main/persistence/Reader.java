@@ -3,6 +3,7 @@ package persistence;
 import model.*;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import ui.GUI;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -11,14 +12,17 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.stream.Stream;
 
+
 // this code is based on the Json Serialize Demo @ https://github.students.cs.ubc.ca/CPSC210/JsonSerializationDemo
 public class Reader {
 
     private String source;
+    private GUI gui;
 
     // EFFECTS: constructs reader to read from source file
-    public Reader(String source) {
+    public Reader(String source, GUI gui) {
         this.source = source;
+        this.gui = gui;
     }
 
     // EFFECTS: reads round from file and returns it;
@@ -57,8 +61,7 @@ public class Reader {
 
     //EFFECTS: parses the game object from a JSON object
     public Game parseGame(JSONObject jsonObject, boolean test) {
-        Boolean gameover = jsonObject.getBoolean("gameover");
-        Boolean playagain = jsonObject.getBoolean("playagain");
+        //Boolean gameover = jsonObject.getBoolean("gameover");
         int numwins = jsonObject.getInt("numwins");
         int numlosses = jsonObject.getInt("numlosses");
         int savegamebalance = jsonObject.getInt("savegamebalance");
@@ -71,18 +74,18 @@ public class Reader {
         }
 
         if (test) {
-            return new Game("", savegamebalance, test);
+            return new Game(savegamebalance, test, gui);
         } else {
-            return new Game(gameover, playagain, numwins, numlosses, roundlist, savegamebalance, test);
+            return new Game(numwins, numlosses, roundlist, savegamebalance, test, gui);
         }
     }
 
     // EFFECTS: parses Round from JSON object and returns it
     public Round parseRound(JSONObject jsonObject) {
         int betamount = parseBetAmount(jsonObject);
-        int result = parseResult(jsonObject);
+        Result result = parseResult(jsonObject);
 
-        return new Round(betamount, result);
+        return new Round(betamount, result, gui);
     }
 
     //EFFECTS: parses bet amount from JSON and returns it
@@ -92,9 +95,21 @@ public class Reader {
     }
 
     //EFFECTS: parses result from json object and returns it
-    public int parseResult(JSONObject jsonObject1) {
-        int result = jsonObject1.getInt("result");
-        return result;
+    public Result parseResult(JSONObject jsonObject1) {
+        String result = jsonObject1.getString("result");
+        Result r = Result.TIE;
+        switch (result) {
+            case "Tie":
+                break;
+            case "Win":
+                r = Result.WIN;
+                break;
+            case "Loss":
+                r = Result.LOSS;
+                break;
+        }
+
+        return r;
     }
 
     //EFFECTS: returns source

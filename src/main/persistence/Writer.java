@@ -7,6 +7,7 @@ import org.json.JSONObject;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
+import java.sql.SQLOutput;
 
 //this code is based on the Json Serialize Demo @ https://github.students.cs.ubc.ca/CPSC210/JsonSerializationDemo
 public class Writer {

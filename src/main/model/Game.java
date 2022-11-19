@@ -3,7 +3,7 @@ package model;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import persistence.Reader;
-import ui.UserInterface;
+import ui.GUI;
 
 import java.io.File;
 import java.io.IOException;
@@ -18,68 +18,61 @@ public class Game {
     private boolean playagain;
     private int numwins;
     private int numlosses;
-    private ArrayList<Round> roundlist = new ArrayList<>();
+    private ArrayList<Round> roundlist;
     private Player player;
     private Hand dealer;
     private Round round;
 
     private int savegamebalance;
+    private int balance;
+    private GUI gui;
 
     //EFFECTS: instantiates a game object
-    public Game(String name, int balance, boolean test) {
-        this.gameover = false;
-        this.playagain = true;
-        this.player = new Player(name, balance);
+    public Game(int balance, boolean test, GUI gui) {
+        this.gameover = balance <= 0;
+        this.player = new Player(balance);
+        this.dealer = new Hand();
+        this.balance = balance;
         this.savegamebalance = 0;
         this.numwins = 0;
         this.numlosses = 0;
-
-        if (!test) {
-            playGame(test);
-        }
+        this.gui = gui;
+        this.roundlist = new ArrayList<>();
     }
 
     //EFFECTS:  instantiates a game object
-    public Game(boolean gameover, boolean playagain, int numwins, int numlosses, ArrayList<Round> rl,
-                int savegamebalance, boolean test) {
-        this.gameover = gameover;
-        this.playagain = true;
+    public Game(int numwins, int numlosses, ArrayList<Round> rl,
+                int savegamebalance, boolean test, GUI gui) {
         this.numwins = numwins;
         this.numlosses = numlosses;
         this.roundlist = rl;
         this.savegamebalance = savegamebalance;
-        this.player = new Player("", this.savegamebalance);
+        this.balance = savegamebalance;
+        this.player = new Player(this.savegamebalance);
         this.dealer = new Hand();
-
-        playGame(test);
+        this.gameover = balance <= 0;
+        this.gui = gui;
+        this.roundlist = new ArrayList<>();
     }
 
     //EFFECTS: plays through a game of blackjack
-    public void playGame(boolean test) {
+    public void playGame(boolean test, int betamount) {
 
-        while (this.playagain && !this.gameover) {
+        //int betamount = UserInterface.askBetAmount(this.player.getBalance(), test);
+        this.balance = player.getBalance();
+        this.player.drawHand();
+        this.dealer = new Hand();
+        this.round = new Round(this.player, this.dealer, betamount, test, this.gui);
 
-            int betamount = UserInterface.askBetAmount(this.player.getBalance(), test);
-
-            this.player.drawHand();
-            this.dealer = new Hand();
-            this.round = new Round(this.player, this.dealer, betamount, test);
-
-            //record result and add to the list of rounds
-            recordResult(player, round.judgeWinner(player.getHand().getHandValue(), dealer.getHandValue()));
-            roundlist.add(round);
-
-            //determine whether to play another round
-            continuePlaying(this.player, test);
-        }
+        //determine whether to play another round
+        //continuePlaying(this.player, test);
         showCurrentSaveGameBalance("./data/game.json");
-        UserInterface.askToSave(this, test);
     }
 
     //MODIFIES: this
     //EFFECTS: gets the save game balance if it is there
     public String fetchSaveGameBalance(boolean test) {
-        Reader r = new Reader("./data/game.json");
+        Reader r = new Reader("./data/game.json", gui);
         try {
             int sgb = r.readSaveGameBalance(test);
             this.savegamebalance = sgb;
@@ -94,7 +87,8 @@ public class Game {
     public void showCurrentSaveGameBalance(String path) {
         File f = new File(path);
         if (f.length() > 3) {
-            UserInterface.printMessage("Your save game has a balance of: " + fetchSaveGameBalance(false));
+            //UserInterface.printMessage("Your save game has a balance of: " + fetchSaveGameBalance(false));
+            this.savegamebalance = 0;
         } else {
             this.savegamebalance = getPlayer().getBalance();
         }
@@ -105,6 +99,7 @@ public class Game {
         return this.savegamebalance;
     }
 
+    /*
     //REQUIRES: player not null
     //MODIFIES: this
     //EFFECTS: set game over to true if the player has no more money, then calls a user interface to tell the user
@@ -117,29 +112,37 @@ public class Game {
             UserInterface.gameOver();
         }
     }
+     */
 
     //REQUIRES: player not null, result is either 0,1,2
     //MODIFIES: this
     //EFFECTS: adjusts wins and losses, player balance, and calls user interface to send out a message
-    public void recordResult(Player player, int result) {
-        String message;
-        ArrayList<String> messagelist = new ArrayList<>();
-        messagelist.add("You tied.");
-        messagelist.add("You lost.");
-        messagelist.add("You won!");
-        if (result == 2) {
-            this.numwins += 1;
-        } else if (result == 1) {
-            this.numlosses += 1;
-        }
-        if (result != 0) {
-            int direction = ((result * 2) - 3);
-            if (!isNull(round)) {
-                player.adjustBalance(direction * round.getBetAmount());
-            }
+    public void recordResult(Player player, Result result) {
+        String message = "Tie";
+        String title = "You tied.";
+        switch (result) {
+            case WIN:
+                this.numwins += 1;
+                message = "Win";
+                title = "You won!";
+                if (!isNull(round)) {
+                    player.adjustBalance(1 * round.getBetAmount());
+                }
+                break;
+            case LOSS:
+                this.numlosses += 1;
+                message = "Loss";
+                title = "You lost";
+                if (!isNull(round)) {
+                    player.adjustBalance(-1 * round.getBetAmount());
+                }
+                break;
         }
         float winrate = getWinrate();
-        UserInterface.roundMessage(player, messagelist.get(result), this.numwins, this.numlosses, winrate);
+        //!!! make round message equivalent in GU
+        gui.setBanner(title);
+        gui.updateGUI(false);
+        //UserInterface.roundMessage(player, message, this.numwins, this.numlosses, winrate);
     }
 
     //EFFECTS: returns the number of wins
@@ -192,11 +195,10 @@ public class Game {
     //EFFECTS: returns fields as JSON object
     public JSONObject toJson() {
         JSONObject json = new JSONObject();
-        json.put("gameover", gameover);
-        json.put("playagain", playagain);
+        //json.put("gameover", gameover);
         json.put("numwins", numwins);
         json.put("numlosses", numlosses);
-        json.put("savegamebalance", savegamebalance);
+        json.put("savegamebalance", balance);
 
         JSONArray jarray = new JSONArray();
         for (Round r: roundlist) {
@@ -219,7 +221,6 @@ public class Game {
         }
         Game game = (Game) o;
         return gameover == game.gameover
-                && playagain == game.playagain
                 && numwins == game.numwins
                 && numlosses == game.numlosses
                 && savegamebalance == game.savegamebalance;
@@ -227,6 +228,10 @@ public class Game {
 
     @Override
     public int hashCode() {
-        return Objects.hash(gameover, playagain, numwins, numlosses, savegamebalance);
+        return Objects.hash(gameover, numwins, numlosses, savegamebalance);
+    }
+
+    public int getBalance() {
+        return balance;
     }
 }

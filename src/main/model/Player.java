@@ -1,19 +1,15 @@
 package model;
 
 import org.json.JSONObject;
-import ui.UserInterface;
 
 //Player represents blackjack player
 public class Player {
-
-    private String name;
     private Hand hand;
     private int balance;
 
     //REQUIRES: initialBalance > 0
     //EFFECTS: creates a Player instance, assigns a name and balance, and draws a hand of cards
-    public Player(String name, int initialBalance) {
-        this.name = name;
+    public Player(int initialBalance) {
         this.balance = initialBalance;
         drawHand();
     }
@@ -28,16 +24,12 @@ public class Player {
     //EFFECTS: tells the user they hit, and calls their hand to hit
     public void hit() {
         hand.hit();
-        String message = "You chose to hit";
-        UserInterface.printMessage(message);
     }
 
     //MODIFIES: this
     //EFFECTS: tells the user they stood, and calls their hand to stand
     public void stand() {
         hand.stand();
-        String message = "You chose to stand";
-        UserInterface.printMessage(message);
     }
 
     //EFFECTS: returns the player's balance
@@ -57,13 +49,8 @@ public class Player {
         return hand;
     }
 
-    //EFFECTS: returns the player's name
-    public String getName() {
-        return name;
-    }
-
     @Override
     public String toString() {
-        return name + " " + hand.toString() + "" + balance;
+        return hand.toString() + "" + balance;
     }
 }
