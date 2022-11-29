@@ -1,6 +1,8 @@
 package ui;
 
 import model.Card;
+import model.Event;
+import model.EventLog;
 import model.Game;
 import model.Round;
 import persistence.Reader;
@@ -15,6 +17,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Iterator;
 
 import static java.util.Objects.isNull;
 
@@ -62,12 +65,19 @@ public class GUI extends JFrame implements ActionListener {
         path = "./data/game.json";
         setLocationRelativeTo(null);
         setVisible(true);
-        //setupMain();
 
-        //gif splash screen
-        //loadinggif()
-        //splash screen class
-        // use progress bar to make save gave
+        //PHASE 4: print out eventlog on close
+        //BASED ON: https://kodejava.org/how-do-i-handle-a-window-closing-event/
+        this.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                Iterator<Event> it = EventLog.getInstance().iterator();
+                while (it.hasNext()) {
+                    System.out.println(it.next() + "\n");
+                }
+                System.exit(0);
+            }
+        });
 
         //setup
         setupLoadScreen();
@@ -214,7 +224,8 @@ public class GUI extends JFrame implements ActionListener {
     public void updateRoundList() {
         this.roundlist = new JList(game.getRoundList().toArray());
         this.righttophalfleft.removeAll();
-        this.righttophalfleft.add(this.roundlist, BorderLayout.CENTER);
+        JScrollPane jsp = new JScrollPane(this.roundlist);
+        this.righttophalfleft.add(jsp, BorderLayout.CENTER);
     }
 
     //EFFECTS: constucts and returns a JPanel with the following presets
@@ -303,8 +314,6 @@ public class GUI extends JFrame implements ActionListener {
                 break;
             case "save":
                 save();
-                //From Stack OverFlow:https://stackoverflow.com/questions/1234912/how-to-programmatically-close-a-jframe
-                dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
                 break;
             case "load":
                 load();
@@ -322,6 +331,7 @@ public class GUI extends JFrame implements ActionListener {
         String bf = betamountfield.getText();
         if (bf.matches("[1-9][0-9]*") && Integer.parseInt(bf) <= game.getBalance())  {
             enablehitstand();
+            EventLog.getInstance().logEvent(new Event("bet amount set for the next round"));
             game.playGame(false, Integer.parseInt(bf));
             updateGUI(false);
         } else {
@@ -339,7 +349,7 @@ public class GUI extends JFrame implements ActionListener {
     public void start() {
         String ib = initialBalanceField.getText();
         if (ib.matches("[1-9][0-9]*"))  {
-            this.game = new Game(Integer.parseInt(ib), false, this);
+            this.game = new Game(Integer.parseInt(ib), false, this, true);
             newGame();
         } else {
             loadtitle.setText("Please enter a valid integer starting balance!");
@@ -406,8 +416,6 @@ public class GUI extends JFrame implements ActionListener {
             //once player has stood, record result and add round to list, then update GUI
             game.recordResult(game.getPlayer(), game.getRound().judgeWinner(game.getPlayer().getHand().getHandValue(),
                     game.getDealer().getHandValue()));
-            game.getRoundList().add(game.getRound());
-
             updateGUI(true);
             if (game.getGameOver()) {
                 gameOver();
@@ -429,9 +437,18 @@ public class GUI extends JFrame implements ActionListener {
             w.write(game);
             w.close();
             //closeAnimation();
+
+            close();
+
         } catch (IOException e) {
             bannertitle.setText("Could not save game.");
         }
+    }
+
+    //EFFECTS: closes window
+    private void close() {
+        //From Stack OverFlow:https://stackoverflow.com/questions/1234912/how-to-programmatically-close-a-jframe
+        dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
     }
 
     /*
@@ -476,8 +493,7 @@ public class GUI extends JFrame implements ActionListener {
 
         //Distinguish between balance and savegame balance
         this.balance.setText("$" + game.getPlayer().getBalance());
-        this.savegamebalance.setText(String.valueOf("$" + game.getSaveGameBalance()));
-        System.out.println(game.getPlayer().getBalance());
+        //this.savegamebalance.setText(String.valueOf("$" + game.getSaveGameBalance()));
 
         this.wins.setText(String.valueOf(game.getNumwins()));
         this.losses.setText(String.valueOf(game.getNumlosses()));

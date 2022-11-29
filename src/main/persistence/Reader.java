@@ -74,7 +74,7 @@ public class Reader {
         }
 
         if (test) {
-            return new Game(savegamebalance, test, gui);
+            return new Game(savegamebalance, test, gui, false);
         } else {
             return new Game(numwins, numlosses, roundlist, savegamebalance, test, gui);
         }
@@ -84,7 +84,6 @@ public class Reader {
     public Round parseRound(JSONObject jsonObject) {
         int betamount = parseBetAmount(jsonObject);
         Result result = parseResult(jsonObject);
-
         return new Round(betamount, result, gui);
     }
 
@@ -98,17 +97,11 @@ public class Reader {
     public Result parseResult(JSONObject jsonObject1) {
         String result = jsonObject1.getString("result");
         Result r = Result.TIE;
-        switch (result) {
-            case "Tie":
-                break;
-            case "Win":
-                r = Result.WIN;
-                break;
-            case "Loss":
-                r = Result.LOSS;
-                break;
+        if (result.equals("Win")) {
+            r = Result.WIN;
+        } else if (result.equals("Loss")) {
+            r = Result.LOSS;
         }
-
         return r;
     }
 

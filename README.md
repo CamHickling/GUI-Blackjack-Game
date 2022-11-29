@@ -51,3 +51,75 @@ and different strategies on the winnings/losings over time.
 - You can locate my visual component on my menu load screen
 - You can save the state of my application by selecting the save and close button
 - You can reload the state of my application by selecting the load button in the loading menu
+
+
+# Phase 4: Task 2 - Event Log Sample
+
+Mon Nov 28 17:43:27 PST 2022
+bet amount set for the next round
+
+Mon Nov 28 17:43:27 PST 2022
+Dealer stood
+
+Mon Nov 28 17:43:28 PST 2022
+Player stood
+
+Mon Nov 28 17:43:28 PST 2022
+Player won round
+
+Mon Nov 28 17:43:28 PST 2022
+previous round added to roundlist
+
+Mon Nov 28 17:43:33 PST 2022
+bet amount set for the next round
+
+Mon Nov 28 17:43:33 PST 2022
+Dealer stood
+
+Mon Nov 28 17:43:34 PST 2022
+Player hit
+
+Mon Nov 28 17:43:35 PST 2022
+Player hit
+
+Mon Nov 28 17:43:35 PST 2022
+Player stood
+
+Mon Nov 28 17:43:35 PST 2022
+Player lost round
+
+Mon Nov 28 17:43:35 PST 2022
+previous round added to roundlist
+
+Mon Nov 28 17:43:40 PST 2022
+bet amount set for the next round
+
+Mon Nov 28 17:43:40 PST 2022
+Dealer stood
+
+Mon Nov 28 17:43:42 PST 2022
+Player stood
+
+Mon Nov 28 17:43:42 PST 2022
+Player won round
+
+Mon Nov 28 17:43:42 PST 2022
+previous round added to roundlist
+
+Mon Nov 28 17:43:48 PST 2022
+bet amount set for the next round
+
+Mon Nov 28 17:43:48 PST 2022
+Dealer stood
+
+Mon Nov 28 17:43:50 PST 2022
+Player hit
+
+Mon Nov 28 17:43:50 PST 2022
+Player stood
+
+Mon Nov 28 17:43:50 PST 2022
+Player lost round
+
+Mon Nov 28 17:43:50 PST 2022
+previous round added to roundlist

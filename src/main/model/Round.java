@@ -49,9 +49,11 @@ public class Round {
         //UserInterface.revealDealerCard(dealer.getMyCards().get(0).getName());
         while (dealer.getHandValue() < 16) {
             dealer.hit();
+            EventLog.getInstance().logEvent(new Event("Dealer hit"));
             //UserInterface.dealerAction("hit");
         }
         dealer.stand();
+        EventLog.getInstance().logEvent(new Event("Dealer stood"));
         //UserInterface.dealerAction("stand");
     }
 
@@ -59,14 +61,19 @@ public class Round {
     public Result judgeWinner(int playervalue, int dealervalue) {
         if (playervalue > 21 && dealervalue > 21) {
             this.result = Result.TIE;
+            EventLog.getInstance().logEvent(new Event("Player tied round"));
         }  else if (playervalue > 21) {
             this.result = Result.LOSS;
+            EventLog.getInstance().logEvent(new Event("Player lost round"));
         } else if (dealervalue > 21) {
             this.result = Result.WIN;
+            EventLog.getInstance().logEvent(new Event("Player won round"));
         } else if (playervalue <= dealervalue) {
             this.result = Result.LOSS;
+            EventLog.getInstance().logEvent(new Event("Player lost round"));
         } else { //(playervalue > dealervalue)
             this.result = Result.WIN;
+            EventLog.getInstance().logEvent(new Event("Player won round"));
         }
         return this.result;
     }
@@ -89,7 +96,20 @@ public class Round {
     public JSONObject toJson() {
         JSONObject json = new JSONObject();
         json.put("betamount", betamount);
-        json.put("result", result);
+        String resultString = "";
+
+        switch (result) {
+            case TIE:
+                resultString = "Tie";
+                break;
+            case WIN:
+                resultString = "Win";
+                break;
+            case LOSS:
+                resultString = "Loss";
+                break;
+        }
+        json.put("result", resultString);
         return json;
     }
 
@@ -101,10 +121,11 @@ public class Round {
         switch (result) {
             case WIN:
                 resultString = "Win";
-                sign = "+";
+                sign = "  +";
                 break;
             case TIE:
                 resultString = "Tie";
+                sign = " ";
                 amt = 0;
                 break;
             case LOSS:

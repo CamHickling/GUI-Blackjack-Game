@@ -24,12 +24,14 @@ public class Player {
     //EFFECTS: tells the user they hit, and calls their hand to hit
     public void hit() {
         hand.hit();
+        EventLog.getInstance().logEvent(new Event("Player hit"));
     }
 
     //MODIFIES: this
     //EFFECTS: tells the user they stood, and calls their hand to stand
     public void stand() {
         hand.stand();
+        EventLog.getInstance().logEvent(new Event("Player stood"));
     }
 
     //EFFECTS: returns the player's balance

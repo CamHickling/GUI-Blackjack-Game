@@ -28,7 +28,7 @@ public class Game {
     private GUI gui;
 
     //EFFECTS: instantiates a game object
-    public Game(int balance, boolean test, GUI gui) {
+    public Game(int balance, boolean test, GUI gui, boolean newgame) {
         this.gameover = balance <= 0;
         this.player = new Player(balance);
         this.dealer = new Hand();
@@ -52,7 +52,6 @@ public class Game {
         this.dealer = new Hand();
         this.gameover = balance <= 0;
         this.gui = gui;
-        this.roundlist = new ArrayList<>();
     }
 
     //EFFECTS: plays through a game of blackjack
@@ -88,9 +87,9 @@ public class Game {
         File f = new File(path);
         if (f.length() > 3) {
             //UserInterface.printMessage("Your save game has a balance of: " + fetchSaveGameBalance(false));
-            this.savegamebalance = 0;
-        } else {
             this.savegamebalance = getPlayer().getBalance();
+        } else {
+            this.savegamebalance = 0;
         }
     }
 
@@ -128,7 +127,6 @@ public class Game {
                 if (!isNull(round)) {
                     player.adjustBalance(1 * round.getBetAmount());
                 }
-                break;
             case LOSS:
                 this.numlosses += 1;
                 message = "Loss";
@@ -136,13 +134,14 @@ public class Game {
                 if (!isNull(round)) {
                     player.adjustBalance(-1 * round.getBetAmount());
                 }
-                break;
         }
         float winrate = getWinrate();
-        //!!! make round message equivalent in GU
+        roundlist.add(round);
+        EventLog.getInstance().logEvent(new Event("previous round added to roundlist"));
         gui.setBanner(title);
         gui.updateGUI(false);
         //UserInterface.roundMessage(player, message, this.numwins, this.numlosses, winrate);
+
     }
 
     //EFFECTS: returns the number of wins
@@ -198,7 +197,7 @@ public class Game {
         //json.put("gameover", gameover);
         json.put("numwins", numwins);
         json.put("numlosses", numlosses);
-        json.put("savegamebalance", balance);
+        json.put("savegamebalance", getPlayer().getBalance());
 
         JSONArray jarray = new JSONArray();
         for (Round r: roundlist) {
