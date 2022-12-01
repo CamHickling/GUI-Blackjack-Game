@@ -127,7 +127,7 @@ previous round added to roundlist
 # Phase 4: Task 3 - Reflecting on the project's design
 The UML diagram of my project:
 
-![Alt text](\data\UML Project Diagram.png "UML Project Diagram")
+![Alt text](UML Project Diagram.png "UML Project Diagram")
 
 Potential refactoring:
 - Singleton design pattern can be applied to the GUI class
@@ -149,4 +149,4 @@ Potential refactoring:
 
 After refactoring, my project would look like this:
 
-![Alt text](\data\UML Revised Diagram.png "UML Revised Diagram")
+![Alt text](UML Revised Diagram.png "UML Revised Diagram")
