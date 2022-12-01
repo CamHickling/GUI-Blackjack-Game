@@ -2,11 +2,9 @@ package model;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
-import persistence.Reader;
 import ui.GUI;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Objects;
 
@@ -15,7 +13,6 @@ import static java.util.Objects.isNull;
 public class Game {
 
     private boolean gameover;
-    private boolean playagain;
     private int numwins;
     private int numlosses;
     private ArrayList<Round> roundlist;
@@ -68,6 +65,8 @@ public class Game {
         showCurrentSaveGameBalance("./data/game.json");
     }
 
+
+    /*
     //MODIFIES: this
     //EFFECTS: gets the save game balance if it is there
     public String fetchSaveGameBalance(boolean test) {
@@ -80,6 +79,7 @@ public class Game {
             return String.valueOf(this.savegamebalance);
         }
     }
+     */
 
     //EFFECTS: if a file exists print the current balance
     //          otherwise set it from player balance
@@ -179,11 +179,6 @@ public class Game {
     //EFFECTS: returns game over bool
     public boolean getGameOver() {
         return this.gameover;
-    }
-
-    //EFFECTS: returns playagain bool
-    public boolean getPlayAgain() {
-        return this.playagain;
     }
 
     //EFFECTS: returns roundlist

@@ -123,3 +123,30 @@ Player lost round
 
 Mon Nov 28 17:43:50 PST 2022
 previous round added to roundlist
+
+# Phase 4: Task 3 - Reflecting on the project's design
+The UML diagram of my project:
+
+![Alt text](\data\UML Project Diagram.png "UML Project Diagram")
+
+Potential refactoring:
+- Singleton design pattern can be applied to the GUI class
+  - This would greatly decrease overall coupling
+  - it would allow Writer, Reader, Round and Game to access GUI without requiring a GUI to be passed to them explicitly
+  - There would no longer be cases where GUI is passes around through multiple constructors
+- Singleton design pattern can further be applied to the Game and Player classes
+  - this would have a small decrease in coupling
+  - Game and Player only ever exist as single instances, and are passed around 
+  - Player is explicitly held by both Game and Round which is unnecessary
+- Maintaining the Player and Hand classes as they are is advantageous as the Dealer can be an instance of a hand object
+- The current GUI class probably violates a number of principles and best practises, so it should split up
+    - This would increase cohesion and better align with the principle of single point of control
+    - A lot of code in the GUI class is related to set up and only runs once
+    - Two static classes can be extracted from GUI
+        - LoadingScreen - sets up the splash screen
+        - MainScreen - sets up the main game screen
+    - GUI class would then only be responsible for basic setup, observing user actions, and on-close events
+
+After refactoring, my project would look like this:
+
+![Alt text](\data\UML Revised Diagram.png "UML Revised Diagram")
