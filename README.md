@@ -125,9 +125,6 @@ Mon Nov 28 17:43:50 PST 2022
 previous round added to roundlist
 
 # Phase 4: Task 3 - Reflecting on the project's design
-The UML diagram of my project:
-
-![Alt text](UML Project Diagram.png "UML Project Diagram")
 
 Potential refactoring:
 - Singleton design pattern can be applied to the GUI class
@@ -146,7 +143,3 @@ Potential refactoring:
         - LoadingScreen - sets up the splash screen
         - MainScreen - sets up the main game screen
     - GUI class would then only be responsible for basic setup, observing user actions, and on-close events
-
-After refactoring, my project would look like this:
-
-![Alt text](UML Revised Diagram.png "UML Revised Diagram")
