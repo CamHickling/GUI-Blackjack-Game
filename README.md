@@ -125,6 +125,7 @@ Mon Nov 28 17:43:50 PST 2022
 previous round added to roundlist
 
 # Phase 4: Task 3 - Reflecting on the project's design
+![default](./UML%20Project%20Diagram.png)
 
 Potential refactoring:
 - Singleton design pattern can be applied to the GUI class
