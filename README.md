@@ -1,6 +1,4 @@
-# My Personal Project
-
-## Blackjack Game
+# Blackjack Game
 
 I propose to design a single-player game of blackjack written in Java that is played against a dealer.
 Just as in a regular game of Blackjack, the **user** will be able to choose from a few actions on their turn.
@@ -40,91 +38,10 @@ and different strategies on the winnings/losings over time.
 - As a user, I want to be able to choose how much money to wager
 - As a user, I want to be able to view a round report after each round
 - As a user, I want to be told if my save game has more balance than my current game
-- 
 - As a user, I want to choose between loading an old game or starting a new one
-- As a user, I want to be able to choose to save or not save at the end of each round
+- As a user, I want to be able to choose to save and exit or continue at the end of each round
 
-# Instructions for Grader
-
-- You can generate the first required event related to adding Xs to a Y by selecting to hit
-- You can generate the second required event related to adding Xs to a Y by selecting to stand
-- You can locate my visual component on my menu load screen
-- You can save the state of my application by selecting the save and close button
-- You can reload the state of my application by selecting the load button in the loading menu
-
-
-# Phase 4: Task 2 - Event Log Sample
-
-Mon Nov 28 17:43:27 PST 2022
-bet amount set for the next round
-
-Mon Nov 28 17:43:27 PST 2022
-Dealer stood
-
-Mon Nov 28 17:43:28 PST 2022
-Player stood
-
-Mon Nov 28 17:43:28 PST 2022
-Player won round
-
-Mon Nov 28 17:43:28 PST 2022
-previous round added to roundlist
-
-Mon Nov 28 17:43:33 PST 2022
-bet amount set for the next round
-
-Mon Nov 28 17:43:33 PST 2022
-Dealer stood
-
-Mon Nov 28 17:43:34 PST 2022
-Player hit
-
-Mon Nov 28 17:43:35 PST 2022
-Player hit
-
-Mon Nov 28 17:43:35 PST 2022
-Player stood
-
-Mon Nov 28 17:43:35 PST 2022
-Player lost round
-
-Mon Nov 28 17:43:35 PST 2022
-previous round added to roundlist
-
-Mon Nov 28 17:43:40 PST 2022
-bet amount set for the next round
-
-Mon Nov 28 17:43:40 PST 2022
-Dealer stood
-
-Mon Nov 28 17:43:42 PST 2022
-Player stood
-
-Mon Nov 28 17:43:42 PST 2022
-Player won round
-
-Mon Nov 28 17:43:42 PST 2022
-previous round added to roundlist
-
-Mon Nov 28 17:43:48 PST 2022
-bet amount set for the next round
-
-Mon Nov 28 17:43:48 PST 2022
-Dealer stood
-
-Mon Nov 28 17:43:50 PST 2022
-Player hit
-
-Mon Nov 28 17:43:50 PST 2022
-Player stood
-
-Mon Nov 28 17:43:50 PST 2022
-Player lost round
-
-Mon Nov 28 17:43:50 PST 2022
-previous round added to roundlist
-
-# Phase 4: Task 3 - Reflecting on the project's design
+# Reflecting on the project's design
 ![default](./UML%20Project%20Diagram.png)
 
 Potential refactoring:
